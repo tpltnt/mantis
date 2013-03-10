@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
-if 2 != len(sys.argv):
-    usage()
-    sys.exit(1)
+# only call if executed as script
+if __name__ == '__main__':
+    if 2 != len(sys.argv):
+        usage()
+        sys.exit(1)
