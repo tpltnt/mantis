@@ -6,3 +6,4 @@
 notes.org
 tests/__pycache__
 *.pyc
+rawdata.netxml
