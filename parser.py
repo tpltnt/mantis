@@ -19,6 +19,24 @@ if __name__ == '__main__':
         sys.stderr.write("opening file failed\n")
     root = tree.getroot()
     for network in tree.findall('wireless-network'):
+        networkdata = {}
         # only handle fixed networks, ignore probes etc.
         if "infrastructure" == network.attrib['type']:
-            print("network found")
+            ssids = network.findall('SSID')
+            ssiddata = {}
+            for ssid in ssids:
+                maxrate = ssid.find('max-rate').text
+                ssiddata['max-rate'] = float(maxrate)
+
+                encryption_modes = ssid.findall('encryption')
+                enctxt = []
+                for enc in encryption_modes:
+                    enctxt.append(enc.text)
+                ssiddata['encryption'] = enctxt
+
+                allessids = ssid.findall('essid')
+                ids = []
+                for essid in allessids:
+                    ids.append(essid.text)
+                ssiddata['essid'] = ids
+            networkdata['ssid'] = ssiddata
