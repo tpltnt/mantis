@@ -18,3 +18,7 @@ if __name__ == '__main__':
     except FileNotFoundError:
         sys.stderr.write("opening file failed\n")
     root = tree.getroot()
+    for network in tree.findall('wireless-network'):
+        # only handle fixed networks, ignore probes etc.
+        if "infrastructure" == network.attrib['type']:
+            print("network found")
