@@ -6,6 +6,85 @@ import xml.etree.ElementTree as ET
 def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
+def extract_ssid_data(rawdata):
+    """Extract relevant SSID data from given XML-node.
+
+    This data contains per SSID: maximum data rate, encryption modes and ESSID.
+    """
+
+    if not isinstance(rawdata,ET.Element):
+        raise TypeError("given rawdata not an ElementTree-element")
+
+    ssiddata = {}
+    maxrate = rawdata.find('max-rate').text
+    ssiddata['max-rate'] = float(maxrate)
+
+    encryption_modes = rawdata.findall('encryption')
+    enctxt = []
+    for enc in encryption_modes:
+        enctxt.append(enc.text)
+        ssiddata['encryption'] = enctxt
+
+    ssiddata['essid'] = rawdata.find('essid').text
+
+    return ssiddata
+
+def extract_snr_info(rawdata):
+    """Extract relevant radio signal data from given XML-node.
+
+    This data contains minimum and maximum levels of the signal and noise.
+    """
+    if not isinstance(rawdata,ET.Element):
+        raise TypeError("given rawdata not an ElementTree-element")
+
+    snrinfo = {}
+    data = rawdata.find('min_signal_dbm').text
+    snrinfo['min_signal_dbm'] = int(data)
+    data = rawdata.find('min_noise_dbm').text
+    snrinfo['min_noise_dbm'] = int(data)
+    data = rawdata.find('min_signal_rssi').text
+    snrinfo['min_signal_rssi'] = int(data)
+    data = rawdata.find('min_noise_rssi').text
+    snrinfo['min_noise_rssi'] = int(data)
+
+    data = rawdata.find('max_signal_dbm').text
+    snrinfo['max_signal_dbm'] = int(data)
+    data = rawdata.find('max_noise_dbm').text
+    snrinfo['max_noise_dbm'] = int(data)
+    data = rawdata.find('max_signal_rssi').text
+    snrinfo['max_signal_rssi'] = int(data)
+    data = rawdata.find('max_noise_rssi').text
+    snrinfo['max_noise_rssi'] = int(data)
+
+    return snrinfo
+
+
+def extract_gps_info(rawdata):
+    """Extract relevant GPS data from given XML-node.
+
+    This data contains the coordinates of the minimum, maximum and peak
+    signal level.
+    """
+
+    if not isinstance(rawdata,ET.Element):
+        raise TypeError("given rawdata not an ElementTree-element")
+
+    gpsinfo = {}
+    data = rawdata.find('min-lat').text
+    gpsinfo['min-lat'] = float(data)
+    data = rawdata.find('min-lon').text
+    gpsinfo['min-lon'] = float(data)
+    data = rawdata.find('max-lat').text
+    gpsinfo['max-lat'] = float(data)
+    data = rawdata.find('max-lon').text
+    gpsinfo['max-lon'] = float(data)
+    data = rawdata.find('peak-lat').text
+    gpsinfo['peak-lat'] = float(data)
+    data = rawdata.find('peak-lon').text
+    gpsinfo['peak-lon'] = float(data)
+
+    return gpsinfo
+
 # only call if executed as script
 if __name__ == '__main__':
     if 2 != len(sys.argv):
@@ -23,20 +102,11 @@ if __name__ == '__main__':
         # only handle fixed networks, ignore probes etc.
         if "infrastructure" == network.attrib['type']:
             ssids = network.findall('SSID')
-            ssiddata = {}
-            for ssid in ssids:
-                maxrate = ssid.find('max-rate').text
-                ssiddata['max-rate'] = float(maxrate)
-
-                encryption_modes = ssid.findall('encryption')
-                enctxt = []
-                for enc in encryption_modes:
-                    enctxt.append(enc.text)
-                ssiddata['encryption'] = enctxt
-
-                allessids = ssid.findall('essid')
-                ids = []
-                for essid in allessids:
-                    ids.append(essid.text)
-                ssiddata['essid'] = ids
+            ssiddata = []
+            for ssidnode in ssids:
+                ssiddata.append( extract_ssid_data(ssidnode) )
             networkdata['ssid'] = ssiddata
+            networkdata['bssid'] = network.find('BSSID').text
+            networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
+            networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
+            print(networkdata)
