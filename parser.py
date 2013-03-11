@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pycouchdb
+import requests
 import sys
 import xml.etree.ElementTree as ET
 
@@ -91,6 +93,12 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
+    server = pycouchdb.Server()
+    try:
+        server.info()
+    except requests.exceptions.ConnectionError:
+        sys.stderr.write("connecting to server failed\n")
+        sys.exit(0)
     tree = ET.ElementTree()
     try:
         tree = ET.parse(sys.argv[1])
@@ -101,6 +109,7 @@ if __name__ == '__main__':
         networkdata = {}
         # only handle fixed networks, ignore probes etc.
         if "infrastructure" == network.attrib['type']:
+            # extract the data
             ssids = network.findall('SSID')
             ssiddata = []
             for ssidnode in ssids:
@@ -110,3 +119,5 @@ if __name__ == '__main__':
             networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
             networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
             print(networkdata)
+            # push it into couchdb
+            
