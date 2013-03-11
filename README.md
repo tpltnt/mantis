@@ -16,3 +16,5 @@ references
 ----------
 * [kismet](http://www.kismetwireless.net/) the sniffer
 * [CouchDB](http://www.couchdb.org) the database
+* [py-couchdb](https://py-couchdb.readthedocs.org) the CouchDB bindings for python
+** install on fedora: ```python3-pip install pycouchdb```
