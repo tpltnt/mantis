@@ -93,12 +93,22 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
+    # assume default config for couchdb
     server = pycouchdb.Server()
     try:
         server.info()
     except requests.exceptions.ConnectionError:
         sys.stderr.write("connecting to server failed\n")
-        sys.exit(0)
+        sys.exit(1)
+    # assume databasename, if database does not exists, create it
+    dbname = "wifinetworks"
+    try:
+        db = server.database(dbname)
+    except pycouchdb.exceptions.NotFound:
+        print("database '"+dbname+"' does not exist, creating one ...")
+        server.create(dbname)
+        db = server.database(dbname)
+
     tree = ET.ElementTree()
     try:
         tree = ET.parse(sys.argv[1])
