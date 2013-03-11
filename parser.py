@@ -108,6 +108,7 @@ if __name__ == '__main__':
         print("database '"+dbname+"' does not exist, creating one ...")
         server.create(dbname)
         db = server.database(dbname)
+    newdoccounter = 0
 
     tree = ET.ElementTree()
     try:
@@ -130,4 +131,6 @@ if __name__ == '__main__':
             networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
             print(networkdata)
             # push it into couchdb
-            
+            doc = db.save(networkdata)
+            newdoccounter += 1
+    print(str(newdoccounter) + " new networks added")
