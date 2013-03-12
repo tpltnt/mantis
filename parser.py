@@ -129,7 +129,6 @@ if __name__ == '__main__':
             networkdata['bssid'] = network.find('BSSID').text
             networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
             networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
-            print(networkdata)
             # push it into couchdb
             doc = db.save(networkdata)
             newdoccounter += 1
