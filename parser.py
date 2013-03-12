@@ -165,6 +165,8 @@ class Mantis:
         }"
 
         allentries = list(self.__db.temporary_query(mapfunction))
+        # this algorithm deletes entries with same UIDs
+        # the current UID could be insufficient
         knownids = []
         killlist = []
         for item in allentries:
