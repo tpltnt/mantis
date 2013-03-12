@@ -156,3 +156,5 @@ if __name__ == '__main__':
     if 2 != len(sys.argv):
         usage()
         sys.exit(1)
+
+    databucket = Mantis()
