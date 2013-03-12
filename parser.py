@@ -138,7 +138,7 @@ class Mantis:
         return gpsinfo
 
     def deflate(db):
-        """Remove all diplicate entries from the database."""
+        """Remove all duplicate entries from the database."""
         mapfunction = "function(doc) {\
         var bssid, essid, uid, docid;\
         if (doc.ssid && doc.bssid) {\
