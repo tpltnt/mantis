@@ -89,20 +89,18 @@ def extract_gps_info(rawdata):
 
 def calcuate_uid_index(db):
     mapfunction = "function(doc) {\
-    var bssid, essid, uid, value;\
-    if (doc.ssid.essid && doc.bssid) {\
+    var bssid, essid, uid;\
+    if (doc.ssid && doc.bssid) {\
         uid = [doc.bssid];\
-        value = doc;\
-        delete value['_id'];\
-        delete value['_rev'];\
         names = [];\
-        for (id in doc.ssid) {\
-            names.push(id['essid']);\
+        for (index in doc.ssid) {\
+            names.push(doc.ssid[index]['essid']);\
         }\
         uid.push(names);\
-        emit(uid, value);\
+        emit(uid, doc);\
     }\
 }"
+
     print(list(db.temporary_query(mapfunction)))
 
 # only call if executed as script
