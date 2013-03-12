@@ -9,9 +9,9 @@ def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
 class Mantis:
-    __db = pycouchdb.client.Database()
+    __db = None
 
-    def __init__(self,dbname = "wifinetworks"):
+    def __init__(self, dbname = "wifinetworks", source = None):
         # assume default config for couchdb
         server = pycouchdb.Server()
         try:
@@ -27,6 +27,30 @@ class Mantis:
         except pycouchdb.exceptions.NotFound:
             server.create(dbname)
         self.__db = server.database(dbname)
+
+    def parse_xml(netxmlfile):
+        """Parse given netxml file."""
+        tree = ET.ElementTree()
+        try:
+            tree = ET.parse(netxmlfile)
+        except FileNotFoundError:
+            sys.stderr.write("opening file failed\n")
+        root = tree.getroot()
+        for network in tree.findall('wireless-network'):
+            networkdata = {}
+            # only handle fixed networks, ignore probes etc.
+            if "infrastructure" == network.attrib['type']:
+                # extract the data
+                ssids = network.findall('SSID')
+                ssiddata = []
+                for ssidnode in ssids:
+                    ssiddata.append( extract_ssid_data(ssidnode) )
+                    networkdata['ssid'] = ssiddata
+                    networkdata['bssid'] = network.find('BSSID').text
+                    networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
+                    networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
+                    # push it into couchdb
+                doc = self.__db.save(networkdata)
 
     def extract_ssid_data(rawdata):
         """Extract relevant SSID data from given XML-node.
@@ -132,28 +156,3 @@ if __name__ == '__main__':
     if 2 != len(sys.argv):
         usage()
         sys.exit(1)
-
-    tree = ET.ElementTree()
-    try:
-        tree = ET.parse(sys.argv[1])
-    except FileNotFoundError:
-        sys.stderr.write("opening file failed\n")
-    root = tree.getroot()
-    for network in tree.findall('wireless-network'):
-        networkdata = {}
-        # only handle fixed networks, ignore probes etc.
-        if "infrastructure" == network.attrib['type']:
-            # extract the data
-            ssids = network.findall('SSID')
-            ssiddata = []
-            for ssidnode in ssids:
-                ssiddata.append( extract_ssid_data(ssidnode) )
-            networkdata['ssid'] = ssiddata
-            networkdata['bssid'] = network.find('BSSID').text
-            networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
-            networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
-            # push it into couchdb
-            doc = db.save(networkdata)
-            newdoccounter += 1
-    print(str(newdoccounter) + " new networks added")
-    deflate(db)
