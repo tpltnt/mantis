@@ -8,10 +8,10 @@ import xml.etree.ElementTree as ET
 def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
-def class mantis:
+class Mantis:
     __db = pycouchdb.client.Database()
 
-    def __init__(self):
+    def __init__(self,dbname = "wifinetworks"):
         # assume default config for couchdb
         server = pycouchdb.Server()
         try:
@@ -19,7 +19,14 @@ def class mantis:
         except requests.exceptions.ConnectionError:
             sys.stderr.write("connecting to server failed\n")
             sys.exit(1)
-        self.__db = 
+
+        # assume databasename, if database does not exists, create it
+        dbname = "wifinetworks"
+        try:
+            db = server.database(dbname)
+        except pycouchdb.exceptions.NotFound:
+            server.create(dbname)
+        self.__db = server.database(dbname)
 
     def extract_ssid_data(rawdata):
         """Extract relevant SSID data from given XML-node.
@@ -125,23 +132,6 @@ if __name__ == '__main__':
     if 2 != len(sys.argv):
         usage()
         sys.exit(1)
-
-    # assume default config for couchdb
-    server = pycouchdb.Server()
-    try:
-        server.info()
-    except requests.exceptions.ConnectionError:
-        sys.stderr.write("connecting to server failed\n")
-        sys.exit(1)
-    # assume databasename, if database does not exists, create it
-    dbname = "wifinetworks"
-    try:
-        db = server.database(dbname)
-    except pycouchdb.exceptions.NotFound:
-        print("database '"+dbname+"' does not exist, creating one ...")
-        server.create(dbname)
-        db = server.database(dbname)
-    newdoccounter = 0
 
     tree = ET.ElementTree()
     try:
