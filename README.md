@@ -13,8 +13,8 @@ must make your source free
 ```
 
 The database layout follows the original XML format. The UID view uses the
-BSSID and the SSIDs as key ("[ BSSID, [SSIDs]]"). The associated ID points
-to the source document, where additional information can be retrieved from.
+BSSID and the SSIDs as key ("[ BSSID, [SSIDs]]"). The associated value points
+to the source document by id and revision.
 
 references
 ----------
