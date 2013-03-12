@@ -11,7 +11,13 @@ def usage():
 class Mantis:
     __db = None
 
-    def __init__(self, dbname = "wifinetworks", source = None):
+    def __init__(self, *args, **kwargs):
+        """Constructor for the Mantis class.
+
+        possible arguments are:
+        * dbname: name of database to use, default is "wifinetworks"
+        * sourcefile: path to netxml source file
+        """
         # assume default config for couchdb
         server = pycouchdb.Server()
         try:
@@ -21,16 +27,22 @@ class Mantis:
             sys.exit(1)
 
         # assume databasename, if database does not exists, create it
-        dbname = "wifinetworks"
+        if 'dbname' in kwargs.keys():
+            dbname = kwargs['dbname']
+        else:
+            dbname = "wifinetworks"
+
         try:
             db = server.database(dbname)
         except pycouchdb.exceptions.NotFound:
             server.create(dbname)
         self.__db = server.database(dbname)
-        if source is not None:
-            self.parse_xml(source)
 
-    def parse_xml(netxmlfile):
+        if 'sourcefile' in kwargs.keys():
+            filename = kwargs['sourcefile']
+            self.parse_xml(filename)
+
+    def parse_xml(self,netxmlfile):
         """Parse given netxml file."""
         updatecounter = 0
         tree = ET.ElementTree()
@@ -47,17 +59,17 @@ class Mantis:
                 ssids = network.findall('SSID')
                 ssiddata = []
                 for ssidnode in ssids:
-                    ssiddata.append( extract_ssid_data(ssidnode) )
+                    ssiddata.append( self.extract_ssid_data(ssidnode) )
                     networkdata['ssid'] = ssiddata
                     networkdata['bssid'] = network.find('BSSID').text
-                    networkdata['snr-info'] = extract_snr_info( network.find('snr-info') )
-                    networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
+                    networkdata['snr-info'] = self.extract_snr_info( network.find('snr-info') )
+                    networkdata['gps-info'] = self.extract_gps_info( network.find('gps-info') )
                     # push it into couchdb
                 doc = self.__db.save(networkdata)
                 updatecounter += 1
         return updatecounter
 
-    def extract_ssid_data(rawdata):
+    def extract_ssid_data(self,rawdata):
         """Extract relevant SSID data from given XML-node.
 
         This data contains per SSID: maximum data rate, encryption modes and
@@ -81,7 +93,7 @@ class Mantis:
 
         return ssiddata
 
-    def extract_snr_info(rawdata):
+    def extract_snr_info(self,rawdata):
         """Extract relevant radio signal data from given XML-node.
 
         This data contains minimum and maximum levels of the signal and noise.
@@ -111,7 +123,7 @@ class Mantis:
         return snrinfo
 
 
-    def extract_gps_info(rawdata):
+    def extract_gps_info(self, rawdata):
         """Extract relevant GPS data from given XML-node.
 
         This data contains the coordinates of the minimum, maximum and peak
@@ -162,4 +174,4 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
-    databucket = Mantis(sys.argv[1])
+    databucket = Mantis(sourcefile=sys.argv[1])
