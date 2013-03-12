@@ -27,9 +27,12 @@ class Mantis:
         except pycouchdb.exceptions.NotFound:
             server.create(dbname)
         self.__db = server.database(dbname)
+        if source is not None:
+            self.parse_xml(source)
 
     def parse_xml(netxmlfile):
         """Parse given netxml file."""
+        updatecounter = 0
         tree = ET.ElementTree()
         try:
             tree = ET.parse(netxmlfile)
@@ -51,6 +54,8 @@ class Mantis:
                     networkdata['gps-info'] = extract_gps_info( network.find('gps-info') )
                     # push it into couchdb
                 doc = self.__db.save(networkdata)
+                updatecounter += 1
+        return updatecounter
 
     def extract_ssid_data(rawdata):
         """Extract relevant SSID data from given XML-node.
@@ -157,4 +162,4 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
-    databucket = Mantis()
+    databucket = Mantis(sys.argv[1])
