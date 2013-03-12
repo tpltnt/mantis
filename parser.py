@@ -87,6 +87,24 @@ def extract_gps_info(rawdata):
 
     return gpsinfo
 
+def calcuate_uid_index(db):
+    mapfunction = "function(doc) {\
+    var bssid, essid, uid, value;\
+    if (doc.ssid.essid && doc.bssid) {\
+        uid = [doc.bssid];\
+        value = doc;\
+        delete value['_id'];\
+        delete value['_rev'];\
+        names = [];\
+        for (id in doc.ssid) {\
+            names.push(id['essid']);\
+        }\
+        uid.push(names);\
+        emit(uid, value);\
+    }\
+}"
+    print(list(db.temporary_query(mapfunction)))
+
 # only call if executed as script
 if __name__ == '__main__':
     if 2 != len(sys.argv):
@@ -133,3 +151,4 @@ if __name__ == '__main__':
             doc = db.save(networkdata)
             newdoccounter += 1
     print(str(newdoccounter) + " new networks added")
+    calcuate_uid_index(db)
