@@ -87,7 +87,7 @@ def extract_gps_info(rawdata):
 
     return gpsinfo
 
-def calcuate_uid_index(db):
+def cleanup(db):
     mapfunction = "function(doc) {\
     var bssid, essid, uid, docid;\
     if (doc.ssid && doc.bssid) {\
@@ -102,7 +102,8 @@ def calcuate_uid_index(db):
     }\
 }"
 
-    print(list(db.temporary_query(mapfunction)))
+    allentries = list(db.temporary_query(mapfunction)))
+    
 
 # only call if executed as script
 if __name__ == '__main__':
