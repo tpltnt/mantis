@@ -149,24 +149,23 @@ class Mantis:
 
         return gpsinfo
 
-    def deflate(db):
+    def deflate(self):
         """Remove all duplicate entries from the database."""
         mapfunction = "function(doc) {\
-        var bssid, essid, uid, docid;\
+        var bssid, essid, uid;\
         if (doc.ssid && doc.bssid) {\
             uid = [doc.bssid];\
-            docid = [doc['_id'], doc['_rev']];\
             names = [];\
             for (index in doc.ssid) {\
                 names.push(doc.ssid[index]['essid']);\
             }\
             uid.push(names);\
-            emit(uid, docid);\
+            emit(uid, null);\
         }\
         }"
 
-        allentries = list(db.temporary_query(mapfunction))
-        print(len(allentries))
+        allentries = list(self.__db.temporary_query(mapfunction))
+        print(allentries)
 
 # only call if executed as script
 if __name__ == '__main__':
@@ -174,4 +173,6 @@ if __name__ == '__main__':
         usage()
         sys.exit(1)
 
-    databucket = Mantis(sourcefile=sys.argv[1])
+    #databucket = Mantis(sourcefile=sys.argv[1])
+    databucket = Mantis()
+    databucket.deflate()
