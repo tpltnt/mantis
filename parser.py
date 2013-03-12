@@ -149,8 +149,8 @@ class Mantis:
 
         return gpsinfo
 
-    def deflate(self):
-        """Remove all duplicate entries from the database."""
+    def remove_duplicates(self):
+        """Remove all duplicate entries from the database. Return number of removed entries."""
         mapfunction = "function(doc) {\
         var bssid, essid, uid;\
         if (doc.ssid && doc.bssid) {\
@@ -165,7 +165,18 @@ class Mantis:
         }"
 
         allentries = list(self.__db.temporary_query(mapfunction))
-        print(allentries)
+        knownids = []
+        killlist = []
+        for item in allentries:
+            if item['key'] not in knownids:
+                knownids.append(item['key'])
+            else:
+                killlist.append(item['id'])
+
+        for docid in killlist:
+            self.__db.delete(docid)
+
+        return len(killlist)
 
 # only call if executed as script
 if __name__ == '__main__':
@@ -175,4 +186,5 @@ if __name__ == '__main__':
 
     #databucket = Mantis(sourcefile=sys.argv[1])
     databucket = Mantis()
-    databucket.deflate()
+    purges = databucket.remove_duplicates()
+    print(purges)
