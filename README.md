@@ -1,9 +1,9 @@
 mantis
 ======
 
-Mantis a partial parser for kismet netxml logs. It reads the XML-files produced
-by kismet and spits data into couchdb. The software is intented for
-privacy-aware Wifi-mapping efforts.
+Mantis a partial parser and database management for kismet netxml logs.
+It reads the XML-files produced by kismet and spits data into couchdb.
+The software is intented for privacy-aware Wifi-mapping efforts.
 
 license: AGPL
 ```
