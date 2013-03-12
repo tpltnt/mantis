@@ -8,102 +8,117 @@ import xml.etree.ElementTree as ET
 def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
-def extract_ssid_data(rawdata):
-    """Extract relevant SSID data from given XML-node.
+def class mantis:
+    __db = pycouchdb.client.Database()
 
-    This data contains per SSID: maximum data rate, encryption modes and ESSID.
-    """
+    def __init__(self):
+        # assume default config for couchdb
+        server = pycouchdb.Server()
+        try:
+            server.info()
+        except requests.exceptions.ConnectionError:
+            sys.stderr.write("connecting to server failed\n")
+            sys.exit(1)
+        self.__db = 
 
-    if not isinstance(rawdata,ET.Element):
-        raise TypeError("given rawdata not an ElementTree-element")
+    def extract_ssid_data(rawdata):
+        """Extract relevant SSID data from given XML-node.
 
-    ssiddata = {}
-    maxrate = rawdata.find('max-rate').text
-    ssiddata['max-rate'] = float(maxrate)
+        This data contains per SSID: maximum data rate, encryption modes and
+        ESSID.
+        """
 
-    encryption_modes = rawdata.findall('encryption')
-    enctxt = []
-    for enc in encryption_modes:
-        enctxt.append(enc.text)
-        ssiddata['encryption'] = enctxt
+        if not isinstance(rawdata,ET.Element):
+            raise TypeError("given rawdata not an ElementTree-element")
 
-    ssiddata['essid'] = rawdata.find('essid').text
+        ssiddata = {}
+        maxrate = rawdata.find('max-rate').text
+        ssiddata['max-rate'] = float(maxrate)
 
-    return ssiddata
+        encryption_modes = rawdata.findall('encryption')
+        enctxt = []
+        for enc in encryption_modes:
+            enctxt.append(enc.text)
+            ssiddata['encryption'] = enctxt
 
-def extract_snr_info(rawdata):
-    """Extract relevant radio signal data from given XML-node.
+        ssiddata['essid'] = rawdata.find('essid').text
 
-    This data contains minimum and maximum levels of the signal and noise.
-    """
-    if not isinstance(rawdata,ET.Element):
-        raise TypeError("given rawdata not an ElementTree-element")
+        return ssiddata
 
-    snrinfo = {}
-    data = rawdata.find('min_signal_dbm').text
-    snrinfo['min_signal_dbm'] = int(data)
-    data = rawdata.find('min_noise_dbm').text
-    snrinfo['min_noise_dbm'] = int(data)
-    data = rawdata.find('min_signal_rssi').text
-    snrinfo['min_signal_rssi'] = int(data)
-    data = rawdata.find('min_noise_rssi').text
-    snrinfo['min_noise_rssi'] = int(data)
+    def extract_snr_info(rawdata):
+        """Extract relevant radio signal data from given XML-node.
 
-    data = rawdata.find('max_signal_dbm').text
-    snrinfo['max_signal_dbm'] = int(data)
-    data = rawdata.find('max_noise_dbm').text
-    snrinfo['max_noise_dbm'] = int(data)
-    data = rawdata.find('max_signal_rssi').text
-    snrinfo['max_signal_rssi'] = int(data)
-    data = rawdata.find('max_noise_rssi').text
-    snrinfo['max_noise_rssi'] = int(data)
+        This data contains minimum and maximum levels of the signal and noise.
+        """
+        if not isinstance(rawdata,ET.Element):
+            raise TypeError("given rawdata not an ElementTree-element")
 
-    return snrinfo
+        snrinfo = {}
+        data = rawdata.find('min_signal_dbm').text
+        snrinfo['min_signal_dbm'] = int(data)
+        data = rawdata.find('min_noise_dbm').text
+        snrinfo['min_noise_dbm'] = int(data)
+        data = rawdata.find('min_signal_rssi').text
+        snrinfo['min_signal_rssi'] = int(data)
+        data = rawdata.find('min_noise_rssi').text
+        snrinfo['min_noise_rssi'] = int(data)
+
+        data = rawdata.find('max_signal_dbm').text
+        snrinfo['max_signal_dbm'] = int(data)
+        data = rawdata.find('max_noise_dbm').text
+        snrinfo['max_noise_dbm'] = int(data)
+        data = rawdata.find('max_signal_rssi').text
+        snrinfo['max_signal_rssi'] = int(data)
+        data = rawdata.find('max_noise_rssi').text
+        snrinfo['max_noise_rssi'] = int(data)
+
+        return snrinfo
 
 
-def extract_gps_info(rawdata):
-    """Extract relevant GPS data from given XML-node.
+    def extract_gps_info(rawdata):
+        """Extract relevant GPS data from given XML-node.
 
-    This data contains the coordinates of the minimum, maximum and peak
-    signal level.
-    """
+        This data contains the coordinates of the minimum, maximum and peak
+        signal level.
+        """
 
-    if not isinstance(rawdata,ET.Element):
-        raise TypeError("given rawdata not an ElementTree-element")
+        if not isinstance(rawdata,ET.Element):
+            raise TypeError("given rawdata not an ElementTree-element")
 
-    gpsinfo = {}
-    data = rawdata.find('min-lat').text
-    gpsinfo['min-lat'] = float(data)
-    data = rawdata.find('min-lon').text
-    gpsinfo['min-lon'] = float(data)
-    data = rawdata.find('max-lat').text
-    gpsinfo['max-lat'] = float(data)
-    data = rawdata.find('max-lon').text
-    gpsinfo['max-lon'] = float(data)
-    data = rawdata.find('peak-lat').text
-    gpsinfo['peak-lat'] = float(data)
-    data = rawdata.find('peak-lon').text
-    gpsinfo['peak-lon'] = float(data)
+        gpsinfo = {}
+        data = rawdata.find('min-lat').text
+        gpsinfo['min-lat'] = float(data)
+        data = rawdata.find('min-lon').text
+        gpsinfo['min-lon'] = float(data)
+        data = rawdata.find('max-lat').text
+        gpsinfo['max-lat'] = float(data)
+        data = rawdata.find('max-lon').text
+        gpsinfo['max-lon'] = float(data)
+        data = rawdata.find('peak-lat').text
+        gpsinfo['peak-lat'] = float(data)
+        data = rawdata.find('peak-lon').text
+        gpsinfo['peak-lon'] = float(data)
 
-    return gpsinfo
+        return gpsinfo
 
-def cleanup(db):
-    mapfunction = "function(doc) {\
-    var bssid, essid, uid, docid;\
-    if (doc.ssid && doc.bssid) {\
-        uid = [doc.bssid];\
-        docid = [doc['_id'], doc['_rev']];\
-        names = [];\
-        for (index in doc.ssid) {\
-            names.push(doc.ssid[index]['essid']);\
+    def deflate(db):
+        """Remove all diplicate entries from the database."""
+        mapfunction = "function(doc) {\
+        var bssid, essid, uid, docid;\
+        if (doc.ssid && doc.bssid) {\
+            uid = [doc.bssid];\
+            docid = [doc['_id'], doc['_rev']];\
+            names = [];\
+            for (index in doc.ssid) {\
+                names.push(doc.ssid[index]['essid']);\
+            }\
+            uid.push(names);\
+            emit(uid, docid);\
         }\
-        uid.push(names);\
-        emit(uid, docid);\
-    }\
-}"
+        }"
 
-    allentries = list(db.temporary_query(mapfunction)))
-    
+        allentries = list(db.temporary_query(mapfunction))
+        print(len(allentries))
 
 # only call if executed as script
 if __name__ == '__main__':
@@ -151,4 +166,4 @@ if __name__ == '__main__':
             doc = db.save(networkdata)
             newdoccounter += 1
     print(str(newdoccounter) + " new networks added")
-    calcuate_uid_index(db)
+    deflate(db)
