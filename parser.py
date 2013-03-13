@@ -149,8 +149,8 @@ class Mantis:
 
         return gpsinfo
 
-    def remove_duplicates(self):
-        """Remove all duplicate entries from the database. Return number of removed entries."""
+    def deflate(self):
+        """Remove all duplicate entries and compact database. Return number of removed entries."""
         mapfunction = "function(doc) {\
         var bssid, essid, uid;\
         if (doc.ssid && doc.bssid) {\
@@ -178,6 +178,8 @@ class Mantis:
         for docid in killlist:
             self.__db.delete(docid)
 
+        self.__db.compact()
+
         return len(killlist)
 
 # only call if executed as script
@@ -188,5 +190,5 @@ if __name__ == '__main__':
 
     #databucket = Mantis(sourcefile=sys.argv[1])
     databucket = Mantis()
-    purges = databucket.remove_duplicates()
+    purges = databucket.deflate()
     print(purges)
