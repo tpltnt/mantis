@@ -183,7 +183,16 @@ class Mantis:
         return len(killlist)
 
     def create_bssid_view(self):
-        print("foo")
+        _doc = {
+            "_id": "_design/testing",
+            "views": {
+                "names": {
+                    "map": "function(doc) { if(doc.bssid) { emit(doc.bssid); } }",
+                    "reduce": "",
+                    }
+                }
+            }
+        self.__db.save(_doc)
 
 # only call if executed as script
 if __name__ == '__main__':
@@ -193,5 +202,6 @@ if __name__ == '__main__':
 
     databucket = Mantis(sourcefile=sys.argv[1])
 #    databucket = Mantis()
+    databucket.create_bssid_view()
     purges = databucket.deflate()
 #    print(purges)
