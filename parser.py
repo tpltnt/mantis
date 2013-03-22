@@ -152,8 +152,8 @@ class Mantis:
     def deflate(self):
         """Remove all duplicate entries and compact database. Return number of removed entries."""
         mapfunction = "function(doc) {\
-        var bssid, essid, uid;\
-        if (doc.ssid && doc.bssid) {\
+            var bssid, essid, uid;\
+            if (doc.ssid && doc.bssid) {\
             uid = [doc.bssid];\
             names = [];\
             for (index in doc.ssid) {\
@@ -163,13 +163,13 @@ class Mantis:
             emit(uid, null);\
         }\
         }"
-
-        allentries = list(self.__db.temporary_query(mapfunction))
+        result = self.__db.temporary_query(mapfunction)
         # this algorithm deletes entries with same UIDs
         # the current UID could be insufficient
         knownids = []
         killlist = []
-        for item in allentries:
+        print(list(result).__class__)
+        for item in result:
             if item['key'] not in knownids:
                 knownids.append(item['key'])
             else:
@@ -182,13 +182,16 @@ class Mantis:
 
         return len(killlist)
 
+    def create_bssid_view(self):
+        print("foo")
+
 # only call if executed as script
 if __name__ == '__main__':
     if 2 != len(sys.argv):
         usage()
         sys.exit(1)
 
-    #databucket = Mantis(sourcefile=sys.argv[1])
-    databucket = Mantis()
+    databucket = Mantis(sourcefile=sys.argv[1])
+#    databucket = Mantis()
     purges = databucket.deflate()
-    print(purges)
+#    print(purges)
