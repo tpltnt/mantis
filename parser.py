@@ -186,9 +186,8 @@ class Mantis:
         _doc = {
             "_id": "_design/testing",
             "views": {
-                "names": {
-                    "map": "function(doc) { if(doc.bssid) { emit(doc.bssid); } }",
-                    "reduce": "",
+                "bssids": {
+                    "map": "function(doc) { if(doc.bssid) { emit(doc.bssid); } }"
                     }
                 }
             }
