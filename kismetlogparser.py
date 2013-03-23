@@ -23,6 +23,13 @@ class Mantis:
         * password: password for the database
         If arguments are not set, default values are used.
         """
+
+        # check all given arguments for validity
+        validargs = ('sourcefile','dbname','host','port','username','password')
+        for arg in kwargs.keys():
+            if arg not in validargs:
+                raise TypeError("invalid argument")
+            
         # assume default config for couchdb
         authstring = "http://"
         if ('username' in kwargs.keys()) and ('password' in kawrgs.keys()):
