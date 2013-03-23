@@ -16,6 +16,7 @@ class Mantis:
 
         possible arguments are:
         * sourcefile: path to netxml source file
+        If a source file (path) is given, it will be parsed automatically.
         * dbname: name of database to use, default is "wifinetworks"
         * host: hostname/IP of database server
         * port: listening port of database server
