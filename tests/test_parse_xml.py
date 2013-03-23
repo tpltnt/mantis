@@ -3,25 +3,21 @@ sys.path.append('../mantis')
 import pytest
 from kismetlogparser import *
 
-@pytest.fixture
-def mantis():
-    return Mantis()
-
-def test_empty(mantis):
+def test_empty(plainmantis):
     with pytest.raises(TypeError):
-        mantis.parse_xml()
+        plainmantis.parse_xml()
 
-def test_float(mantis):
+def test_float(plainmantis):
     with pytest.raises(TypeError):
-        mantis.parse_xml(2.3)
+        plainmantis.parse_xml(2.3)
 
-def test_int(mantis):
+def test_int(plainmantis):
     with pytest.raises(TypeError):
-        mantis.parse_xml(42)
+        plainmantis.parse_xml(42)
 
-def test_nonexistent(mantis):
+def test_nonexistent(plainmantis):
     with pytest.raises(ValueError):
-        mantis.parse_xml('/i/do/not/exist')
+        plainmantis.parse_xml('/i/do/not/exist')
 
-def test_minimalfile(mantis):
-    assert 1 == mantis.parse_xml('./tests/minimal.netxml')
+def test_minimalfile(plainmantis):
+    assert 1 == plainmantis.parse_xml('./tests/minimal.netxml')
