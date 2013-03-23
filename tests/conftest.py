@@ -17,3 +17,8 @@ def et_ssidnode():
     root = tree.getroot()
     network = tree.findall('wireless-network')[1]
     return network.find('SSID')
+
+@pytest.fixture(scope="module")
+def et_empty():
+    tree = ET.ElementTree()
+    return tree.getroot()
