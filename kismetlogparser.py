@@ -32,6 +32,12 @@ class Mantis:
             
         # assume default config for couchdb
         authstring = "http://"
+        if ('username' in kwargs.keys()) and ('password' not in kwargs.keys()):
+            raise ValueError("password missing")
+
+        if ('username' not in kwargs.keys()) and ('password' in kwargs.keys()):
+            raise ValueError("username missing")
+
         if ('username' in kwargs.keys()) and ('password' in kwargs.keys()):
             authstring +=  kwargs['username'] + ":" + kwargs['password']
 
