@@ -106,7 +106,7 @@ class Mantis:
         try:
             tree = ET.parse(netxmlfile)
         except FileNotFoundError:
-            sys.stderr.write("opening file failed\n")
+            raise FileNotFoundError("netxml file not found")
         root = tree.getroot()
         for network in tree.findall('wireless-network'):
             networkdata = {}
