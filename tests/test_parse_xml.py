@@ -26,3 +26,6 @@ def test_int(mantis):
 def test_nonexistent(mantis):
     with pytest.raises(ValueError):
         mantis.parse_xml('/i/do/not/exist')
+
+def test_minimalfile(mantis):
+    mantis.parse_xml('./tests/minimal.netxml')
