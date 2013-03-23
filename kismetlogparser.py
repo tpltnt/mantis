@@ -116,7 +116,7 @@ class Mantis:
                 ssids = network.findall('SSID')
                 ssiddata = []
                 for ssidnode in ssids:
-                    ssiddata.append( self.extract_ssid_data(ssidnode) )
+                    ssiddata.append( self.extract_ssid_info(ssidnode) )
                     networkdata['ssid'] = ssiddata
                     networkdata['bssid'] = network.find('BSSID').text
                     networkdata['snr-info'] = self.extract_snr_info( network.find('snr-info') )
@@ -126,7 +126,7 @@ class Mantis:
                 updatecounter += 1
         return updatecounter
 
-    def extract_ssid_data(self,rawdata):
+    def extract_ssid_info(self,rawdata):
         """Extract relevant SSID data from given XML-node.
 
         This data contains per SSID: maximum data rate, encryption modes and
