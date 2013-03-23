@@ -14,3 +14,14 @@ def mantis():
 def test_empty(mantis):
     with pytest.raises(TypeError):
         mantis.parse_xml()
+
+def test_float(mantis):
+    with pytest.raises(TypeError):
+        mantis.parse_xml(2.3)
+
+def test_int(mantis):
+    with pytest.raises(TypeError):
+        mantis.parse_xml(42)
+
+def test_nonexistent(mantis):
+    mantis.parse_xml('/i/do/not/exist')
