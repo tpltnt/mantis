@@ -15,11 +15,34 @@ class Mantis:
         """Constructor for the Mantis class.
 
         possible arguments are:
-        * dbname: name of database to use, default is "wifinetworks"
         * sourcefile: path to netxml source file
+        * dbname: name of database to use, default is "wifinetworks"
+        * host: hostname/IP of database server
+        * port: listening port of database server
+        * username: username for the database
+        * password: password for the database
+        If arguments are not set, default values are used.
         """
         # assume default config for couchdb
-        server = pycouchdb.Server()
+        authstring = "http://"
+        if ('username' in kwargs.keys()) and ('password' in kawrgs.keys()):
+            authstring +=  kwargs['username'] + ":" + kwargs['password']
+
+        if len(authstring) > 8:
+            authstring += "@"
+
+        if 'host' in kwargs.keys():
+            authstring += kwargs['host']
+        else:
+            authstring += "localhost"
+
+        if 'port' in kwargs.keys():
+            authstring += ":" + kwargs['port']
+        else:
+            authstring += ":5984"
+
+        server = pycouchdb.Server(authstring)
+
         try:
             server.info()
         except requests.exceptions.ConnectionError:
