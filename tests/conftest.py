@@ -8,15 +8,18 @@ def plainmantis():
     return Mantis()
 
 @pytest.fixture(scope="module")
-def et_ssidnode():
+def et_networknode():
     tree = ET.ElementTree()
     try:
         tree = ET.parse('./tests/minimal.netxml')
     except FileNotFoundError:
         raise FileNotFoundError("netxml file not found")
     root = tree.getroot()
-    network = tree.findall('wireless-network')[1]
-    return network.find('SSID')
+    return tree.findall('wireless-network')[1]
+
+@pytest.fixture(scope="module")
+def et_ssidnode(et_networknode):
+    return et_networknode.find('SSID')
 
 @pytest.fixture(scope="module")
 def et_empty():
