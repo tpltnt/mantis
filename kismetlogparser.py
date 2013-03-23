@@ -93,6 +93,13 @@ class Mantis:
 
         if not isinstance(netxmlfile,str):
             raise TypeError("no string with filename/path given")
+        testfile = None
+        try:
+            testfile = open(netxmlfile)
+        except IOError:
+            raise ValueError("file does not exist")
+        if None != testfile:
+            testfile.close()
 
         updatecounter = 0
         tree = ET.ElementTree()
