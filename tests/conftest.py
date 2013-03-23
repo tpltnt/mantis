@@ -22,3 +22,9 @@ def et_ssidnode():
 def et_empty():
     tree = ET.ElementTree()
     return tree.getroot()
+
+@pytest.fixture(scope="module")
+def et_one_node():
+    tree = ET.ElementTree()
+    tree = ET.parse('./tests/onenode.xml')
+    return tree.getroot()
