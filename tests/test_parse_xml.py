@@ -28,4 +28,4 @@ def test_nonexistent(mantis):
         mantis.parse_xml('/i/do/not/exist')
 
 def test_minimalfile(mantis):
-    mantis.parse_xml('./tests/minimal.netxml')
+    assert 1 == mantis.parse_xml('./tests/minimal.netxml')
