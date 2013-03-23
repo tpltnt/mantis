@@ -89,7 +89,11 @@ class Mantis:
             self.parse_xml(filename)
 
     def parse_xml(self,netxmlfile):
-        """Parse given netxml file."""
+        """Parse given netxml file(path)."""
+
+        if not isinstance(netxmlfile,str):
+            raise TypeError("no string with filename/path given")
+
         updatecounter = 0
         tree = ET.ElementTree()
         try:
