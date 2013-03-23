@@ -24,5 +24,5 @@ def test_int(mantis):
         mantis.parse_xml(42)
 
 def test_nonexistent(mantis):
-    with pytest.parse_xml(ValueError):
+    with pytest.raises(ValueError):
         mantis.parse_xml('/i/do/not/exist')
