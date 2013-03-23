@@ -8,8 +8,7 @@ def plainmantis():
     return Mantis()
 
 @pytest.fixture(scope="module")
-def et_ssidnode(mantis):
-    foomantis = Mantis()
+def et_ssidnode():
     tree = ET.ElementTree()
     try:
         tree = ET.parse('./tests/minimal.netxml')
