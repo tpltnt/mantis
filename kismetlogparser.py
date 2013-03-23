@@ -32,7 +32,7 @@ class Mantis:
             
         # assume default config for couchdb
         authstring = "http://"
-        if ('username' in kwargs.keys()) and ('password' in kawrgs.keys()):
+        if ('username' in kwargs.keys()) and ('password' in kwargs.keys()):
             authstring +=  kwargs['username'] + ":" + kwargs['password']
 
         if len(authstring) > 8:
