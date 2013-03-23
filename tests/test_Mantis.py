@@ -28,3 +28,13 @@ def test_password_only():
 def test_no_username_and_password():
     foo = Mantis()
 
+def test_sourcefile_float():
+    with pytest.raises(TypeError):
+        foo = Mantis(sourcefile=2.3)
+
+def test_nonexistent_sourcefile():
+    with pytest.raises(ValueError):
+        foo = Mantis(sourcefile='/i/do/not/exit')
+
+def test_sourcefile():
+    foo = Mantis(sourcefile='./tests/minimal.netxml')

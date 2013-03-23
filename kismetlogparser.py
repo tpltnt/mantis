@@ -76,6 +76,16 @@ class Mantis:
 
         if 'sourcefile' in kwargs.keys():
             filename = kwargs['sourcefile']
+            if not isinstance(filename,str):
+                raise TypeError("given filename is not a string")
+            filetest = None
+            try:
+                filetest = open(filename)
+            except IOError:
+                raise ValueError("given file(name) does not exist")
+            if None != filetest:
+                filetest.close()
+
             self.parse_xml(filename)
 
     def parse_xml(self,netxmlfile):
