@@ -59,8 +59,7 @@ class Mantis:
         try:
             server.info()
         except requests.exceptions.ConnectionError:
-            sys.stderr.write("connecting to server failed\n")
-            sys.exit(1)
+            raise requests.exceptions.ConnectionError("connecting to server failed")
 
         # assume databasename, if database does not exists, create it
         if 'dbname' in kwargs.keys():
