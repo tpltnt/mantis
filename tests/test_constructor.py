@@ -46,6 +46,16 @@ def test_portnumber():
     foo = Mantis(port=PORT)
 
 
+def test_port_too_low():
+    with pytest.raises(ValueError):
+        foo = Mantis(port=-1)
+
+
+def test_port_too_high():
+    with pytest.raises(ValueError):
+        foo = Mantis(port=66535)
+
+
 def test_sourcefile_float():
     with pytest.raises(TypeError):
         foo = Mantis(sourcefile=2.3)
