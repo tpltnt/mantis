@@ -7,6 +7,7 @@ from kismetlogparser import *
 # adjust accordung to your configuration
 USERNAME = 'username'
 PASSWORD = 'password'
+HOSTNAME = 'testhost'
 
 
 def test_contructor_empty():
@@ -34,6 +35,10 @@ def test_password_only():
 
 def test_no_username_and_password():
     foo = Mantis()
+
+
+def test_hostname():
+    foo = Mantis(host=HOSTNAME)
 
 
 def test_sourcefile_float():
