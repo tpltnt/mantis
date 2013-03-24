@@ -225,12 +225,14 @@ class Mantis:
         # the current UID could be insufficient
         knownids = []
         killlist = []
-        print(list(result).__class__)
-        for item in result:
-            if item['key'] not in knownids:
-                knownids.append(item['key'])
-            else:
-                killlist.append(item['id'])
+        try:
+            for item in result:
+                if item['key'] not in knownids:
+                    knownids.append(item['key'])
+                else:
+                    killlist.append(item['id'])
+        except KeyError:
+            raise BaseException("user not authenticated to database")
 
         for docid in killlist:
             self.__db.delete(docid)
