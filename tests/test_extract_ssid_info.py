@@ -24,10 +24,10 @@ def test_string(plainmantis):
         plainmantis.extract_ssid_info('foo')
 
 
-def test_minimalfile(plainmantis, et_ssidnode):
+def test_minimalfile(plainmantis, et_ssid_node):
     info = {'max-rate': 54.0, 'essid': 'WLAN',
             'encryption': ['WPA+TKIP', 'WPA+PSK']}
-    assert info == plainmantis.extract_ssid_info(et_ssidnode)
+    assert info == plainmantis.extract_ssid_info(et_ssid_node)
 
 
 def test_emptyfile(plainmantis):

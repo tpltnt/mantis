@@ -31,7 +31,7 @@ def et_networknode():
 
 
 @pytest.fixture(scope="module")
-def et_ssidnode(et_networknode):
+def et_ssid_node(et_networknode):
     return et_networknode.find('SSID')
 
 
