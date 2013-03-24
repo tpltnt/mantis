@@ -4,9 +4,19 @@ import pytest
 from kismetlogparser import *
 
 
+# adjust as needed
+USERNAME = 'username'
+PASSWORD = 'password'
+
+
 @pytest.fixture(scope="module")
 def plainmantis():
     return Mantis()
+
+
+@pytest.fixture(scope="module")
+def authmantis():
+    return Mantis(username=USERNAME, password=PASSWORD)
 
 
 @pytest.fixture(scope="module")
