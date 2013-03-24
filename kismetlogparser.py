@@ -51,6 +51,11 @@ class Mantis:
             authstring += "localhost"
 
         if 'port' in kwargs.keys():
+            if isinstance(kwargs['port'],int):
+                if 65535 <= kwargs['port']:
+                    raise ValueError("port number too high")
+                if 0 > kwargs['port']:
+                    raise ValueError("port number too low")
             authstring += ":" + str(kwargs['port'])
         else:
             authstring += ":5984"
