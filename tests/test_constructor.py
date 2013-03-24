@@ -9,6 +9,7 @@ USERNAME = 'username'
 PASSWORD = 'password'
 HOSTNAME = 'testhost'
 PORT = 5984
+DBNAME = 'testdb'
 
 
 def test_contructor_empty():
@@ -32,6 +33,11 @@ def test_username_only():
 def test_password_only():
     with pytest.raises(ValueError):
         foo = Mantis(password=PASSWORD)
+
+
+def test_wrong_username_and_password():
+    with pytest.raises(pycouchdb.exceptions.AuthenticationFailed):
+        foo = Mantis(username='807a7ac9', password='f3beeef72b')
 
 
 def test_no_username_and_password():
@@ -68,3 +74,14 @@ def test_nonexistent_sourcefile():
 
 def test_sourcefile():
     foo = Mantis(sourcefile='./tests/minimal.netxml')
+
+
+def test_dbname():
+    foo = Mantis(username=USERNAME, password=PASSWORD, dbname=DBNAME)
+
+
+def test_unauth_dbname():
+    with pytest.raises(pycouchdb.exceptions.AuthenticationFailed):
+        foo = Mantis(username='807a7ac9', password='f3beeef72b', dbname=DBNAME)
+
+# test for valid, but non-admin user needed -> pycouchdb.exceptions.Conflict
