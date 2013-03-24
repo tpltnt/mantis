@@ -8,6 +8,7 @@ from kismetlogparser import *
 USERNAME = 'username'
 PASSWORD = 'password'
 HOSTNAME = 'testhost'
+PORT = 5984
 
 
 def test_contructor_empty():
@@ -39,6 +40,10 @@ def test_no_username_and_password():
 
 def test_hostname():
     foo = Mantis(host=HOSTNAME)
+
+
+def test_portnumber():
+    foo = Mantis(port=PORT)
 
 
 def test_sourcefile_float():
