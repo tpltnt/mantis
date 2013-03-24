@@ -16,6 +16,11 @@ The database layout follows the original XML format. The UID view uses the
 BSSID and the SSIDs as key ("[ BSSID, [SSIDs]]"). The associated value points
 to the source document by id and revision.
 
+testing
+-------
+* configure host by running: ```echo '127.0.0.1	testhost' >> /etc/hosts```
+* run tests: ```pytest```
+
 references
 ----------
 * [kismet](http://www.kismetwireless.net/) the sniffer
