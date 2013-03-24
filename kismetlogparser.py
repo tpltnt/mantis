@@ -51,7 +51,7 @@ class Mantis:
             authstring += "localhost"
 
         if 'port' in kwargs.keys():
-            authstring += ":" + kwargs['port']
+            authstring += ":" + str(kwargs['port'])
         else:
             authstring += ":5984"
 
