@@ -20,6 +20,10 @@ testing
 -------
 * configure host by running: ```echo '127.0.0.1	testhost' >> /etc/hosts```
 * run tests: ```pytest```
+* avoid having the following account
+    * username: 807a7ac9
+    * password: f3beeef72b
+    * used to test for authentication failure
 
 references
 ----------
