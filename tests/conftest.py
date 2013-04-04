@@ -4,9 +4,9 @@ import pytest
 from kismetlogparser import *
 
 
-# adjust as needed
-USERNAME = 'username'
-PASSWORD = 'password'
+def pytest_addoption(parser):
+    parser.addini("dbusername", "CouchDB username")
+    parser.addini("dbpassword", "CouchDB password")
 
 
 @pytest.fixture(scope="module")
@@ -14,9 +14,12 @@ def plainmantis():
     return Mantis()
 
 
-@pytest.fixture(scope="module")
-def authmantis():
-    return Mantis(username=USERNAME, password=PASSWORD)
+#@pytest.fixture(scope="module")
+@pytest.fixture
+def authmantis(pytestconfig):
+    return Mantis(
+        username=pytestconfig.getini('dbusername'),
+        password=pytestconfig.getini('dbpassword'))
 
 
 @pytest.fixture(scope="module")
