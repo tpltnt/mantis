@@ -9,7 +9,7 @@ def pytest_addoption(parser):
     parser.addini("dbpassword", "CouchDB password")
     parser.addini("dbname", "CouchDB name")
     parser.addini("host", "host (name or IP) on which the CouchDB is running")
-    parser.addini("port"; "port number CouchDB listens on")
+    parser.addini("port", "port number CouchDB listens on")
 
 
 @pytest.fixture(scope="module")
