@@ -4,14 +4,6 @@ import pytest
 from kismetlogparser import *
 
 
-# adjust accordung to your configuration
-USERNAME = 'username'
-PASSWORD = 'password'
-HOSTNAME = 'testhost'
-PORT = 5984
-DBNAME = 'testdb'
-
-
 def test_contructor_empty():
     foo = Mantis()
 
@@ -21,18 +13,20 @@ def test_constructor_invalid_keyword():
         foo = Mantis(bar='baz')
 
 
-def test_username_and_password():
-    foo = Mantis(username=USERNAME, password=PASSWORD)
+def test_username_and_password(pytestconfig):
+    foo = Mantis(
+        username=pytestconfig.getini('dbusername'),
+        password=pytestconfig.getini('dbpassword'))
 
 
-def test_username_only():
+def test_username_only(pytestconfig):
     with pytest.raises(ValueError):
-        foo = Mantis(username=USERNAME)
+        foo = Mantis(username=pytestconfig.getini('dbusername'))
 
 
-def test_password_only():
+def test_password_only(pytestconfig):
     with pytest.raises(ValueError):
-        foo = Mantis(password=PASSWORD)
+        foo = Mantis(password=pytestconfig.getini('dbpassword'))
 
 
 def test_wrong_username_and_password():
@@ -44,12 +38,12 @@ def test_no_username_and_password():
     foo = Mantis()
 
 
-def test_hostname():
-    foo = Mantis(host=HOSTNAME)
+def test_hostname(pytestconfig):
+    foo = Mantis(host=pytestconfig.getini('host'))
 
 
-def test_portnumber():
-    foo = Mantis(port=PORT)
+def test_portnumber(pytestconfig):
+    foo = Mantis(port=pytestconfig.getini('port'))
 
 
 def test_port_too_low():
@@ -76,12 +70,16 @@ def test_sourcefile():
     foo = Mantis(sourcefile='./tests/minimal.netxml')
 
 
-def test_dbname():
-    foo = Mantis(username=USERNAME, password=PASSWORD, dbname=DBNAME)
+def test_dbname(pytestconfig):
+    foo = Mantis(
+        username=pytestconfig.getini('dbusername'),
+        password=pytestconfig.getini('dbpassword'),
+        dbname=pytestconfig.getini('dbname'))
 
 
-def test_unauth_dbname():
+def test_unauth_dbname(pytestconfig):
     with pytest.raises(pycouchdb.exceptions.AuthenticationFailed):
-        foo = Mantis(username='807a7ac9', password='f3beeef72b', dbname=DBNAME)
+        foo = Mantis(username='807a7ac9', password='f3beeef72b',
+                     dbname=pytestconfig.getini('dbname'))
 
 # test for valid, but non-admin user needed -> pycouchdb.exceptions.Conflict
