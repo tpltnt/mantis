@@ -71,8 +71,8 @@ def test_nonexistent_sourcefile():
         foo = Mantis(sourcefile='/i/do/not/exit')
 
 
-def test_sourcefile():
-    foo = Mantis(sourcefile='./tests/minimal.netxml')
+def test_sourcefile(pytestconfig):
+    foo = Mantis(sourcefile=pytestconfig.getini('testdata'))
 
 
 def test_dbname(pytestconfig):
@@ -87,4 +87,7 @@ def test_unauth_dbname(pytestconfig):
         foo = Mantis(username='807a7ac9', password='f3beeef72b',
                      dbname=pytestconfig.getini('dbname'))
 
+
+#def test_db_creation(pytestconfig):
+#    foo = Mantis
 # test for valid, but non-admin user needed -> pycouchdb.exceptions.Conflict
