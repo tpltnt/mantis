@@ -42,6 +42,11 @@ def test_hostname(pytestconfig):
     foo = Mantis(host=pytestconfig.getini('host'))
 
 
+def test_invalid_ip():
+    with pytest.raises(requests.exceptions.ConnectionError):
+        foo = Mantis(host='127.0.0.99')
+
+
 def test_portnumber(pytestconfig):
     foo = Mantis(port=pytestconfig.getini('port'))
 
