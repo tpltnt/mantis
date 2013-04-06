@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../mantis')
 import pytest
+import pycouchdb
 from kismetlogparser import *
 
 
@@ -88,6 +89,18 @@ def test_unauth_dbname(pytestconfig):
                      dbname=pytestconfig.getini('dbname'))
 
 
-#def test_db_creation(pytestconfig):
-#    foo = Mantis
+def test_db_creation(pytestconfig):
+    randomdbname = "3d5d8515dcdjfgest268d4adf653feca6nmsoiwqc051adkxd"
+    foo = Mantis(host=pytestconfig.getini('host'),
+                 port=pytestconfig.getini('port'),
+                 username=pytestconfig.getini('dbusername'),
+                 password=pytestconfig.getini('dbpassword'),
+                 dbname=randomdbname)
+    authstring = "http://"
+    authstring += pytestconfig.getini('dbusername')+":"
+    authstring += pytestconfig.getini('dbpassword')+"@"
+    authstring += pytestconfig.getini('host')+":"
+    authstring += pytestconfig.getini('port')
+    server = pycouchdb.Server(authstring)
+    server.delete(randomdbname)
 # test for valid, but non-admin user needed -> pycouchdb.exceptions.Conflict
