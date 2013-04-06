@@ -24,5 +24,5 @@ def test_nonexistent(plainmantis):
         plainmantis.parse_xml('/i/do/not/exist')
 
 
-def test_minimalfile(plainmantis):
-    assert 1 == plainmantis.parse_xml('./tests/minimal.netxml')
+def test_minimalfile(plainmantis, pytestconfig):
+    assert 1 == plainmantis.parse_xml(pytestconfig.getini('testdata'))
