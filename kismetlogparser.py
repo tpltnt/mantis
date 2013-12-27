@@ -23,6 +23,8 @@ class Mantis:
         * username: username for the database
         * password: password for the database
         If arguments are not set, default values are used.
+
+        :raises: TypeError, ValueError
         """
 
         # check all given arguments for validity
@@ -93,8 +95,15 @@ class Mantis:
 
             self.parse_xml(filename)
 
+
     def parse_xml(self,netxmlfile):
-        """Parse given netxml file(path)."""
+        """
+        Parse given netxml file(path).
+
+        :param netxmlfile: name (path) of the file to open
+        :type netxmlfile: str
+        :raises: TypeError, ValueError
+        """
 
         if not isinstance(netxmlfile,str):
             raise TypeError("no string with filename/path given")
@@ -131,11 +140,16 @@ class Mantis:
                 updatecounter += 1
         return updatecounter
 
+
     def extract_ssid_info(self,rawdata):
         """Extract relevant SSID data from given XML-node.
 
         This data contains per SSID: maximum data rate, encryption modes and
         ESSID.
+
+        :param rawdata: XML element to parse
+        :type rawdata: xml.etree.ElementTree.Element
+        :raises: TypeError
         """
 
         if not isinstance(rawdata,ET.Element):
@@ -155,10 +169,15 @@ class Mantis:
 
         return ssiddata
 
+
     def extract_snr_info(self,rawdata):
         """Extract relevant radio signal data from given XML-node.
 
         This data contains minimum and maximum levels of the signal and noise.
+
+        :param rawdata: XML element to parse
+        :type rawdata: xml.etree.ElementTree.Element
+        :raises: TypeError
         """
         if not isinstance(rawdata,ET.Element):
             raise TypeError("given rawdata not an ElementTree-element")
@@ -190,6 +209,10 @@ class Mantis:
 
         This data contains the coordinates of the minimum, maximum and peak
         signal level.
+
+        :param rawdata: XML element to parse
+        :type rawdata: xml.etree.ElementTree.Element
+        :raises: TypeError
         """
 
         if not isinstance(rawdata,ET.Element):
@@ -211,8 +234,14 @@ class Mantis:
 
         return gpsinfo
 
+
     def deflate(self):
-        """Remove all duplicate entries and compact database. Return number of removed entries."""
+        """
+        Remove all duplicate entries and compact database. Return number of removed entries.
+
+        :returns: number of entries removed
+        :raises: BaseException
+        """
         mapfunction = "function(doc) {\
             var bssid, essid, uid;\
             if (doc.ssid && doc.bssid) {\
@@ -246,6 +275,7 @@ class Mantis:
 
         return len(killlist)
 
+
     def create_bssid_view(self):
         _doc = {
             "_id": "_design/testing",
@@ -256,6 +286,7 @@ class Mantis:
                 }
             }
         self.__db.save(_doc)
+
 
 # only call if executed as script
 if __name__ == '__main__':
