@@ -9,6 +9,14 @@ def usage():
     print("usage: ./parser.py <NETXML-FILE>")
 
 class Mantis:
+    """
+    Mantis parses (parts of) a kismet netxml file and can store
+    the information extracted in a CouchDB.
+
+    :author: tpltnt 2013
+    :license: AGPLv3
+    """
+
     __db = None
 
     def __init__(self, *args, **kwargs):
