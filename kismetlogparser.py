@@ -20,7 +20,8 @@ class Mantis:
     __db = None
 
     def __init__(self, *args, **kwargs):
-        """Constructor for the Mantis class.
+        """
+        Constructor for the Mantis class.
 
         possible arguments are:
         * sourcefile: path to netxml source file
@@ -106,7 +107,7 @@ class Mantis:
 
     def parse_xml(self,netxmlfile):
         """
-        Parse given netxml file(path).
+        Parse given netxml file(path) and store everything in a CouchDB.
 
         :param netxmlfile: name (path) of the file to open
         :type netxmlfile: str
@@ -150,7 +151,8 @@ class Mantis:
 
 
     def extract_ssid_info(self,rawdata):
-        """Extract relevant SSID data from given XML-node.
+        """
+        Extract relevant SSID data from given XML-node.
 
         This data contains per SSID: maximum data rate, encryption modes and
         ESSID.
@@ -179,7 +181,8 @@ class Mantis:
 
 
     def extract_snr_info(self,rawdata):
-        """Extract relevant radio signal data from given XML-node.
+        """
+        Extract relevant radio signal data from given XML-node.
 
         This data contains minimum and maximum levels of the signal and noise.
 
@@ -213,7 +216,8 @@ class Mantis:
 
 
     def extract_gps_info(self, rawdata):
-        """Extract relevant GPS data from given XML-node.
+        """
+        Extract relevant GPS data from given XML-node.
 
         This data contains the coordinates of the minimum, maximum and peak
         signal level.
