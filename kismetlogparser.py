@@ -114,7 +114,7 @@ class Mantis:
         :type networkdata: str
         :raises: TypeError, ValueError
         """
-        [self.__db.save(nwd) for nwd in networkdata]
+        self.__db.save(nwd) for nwd in networkdata]
 
 
     def parse_xml(self,netxmlfile):
@@ -158,7 +158,6 @@ class Mantis:
                     networkdata['bssid'] = network.find('BSSID').text
                     networkdata['snr-info'] = self.extract_snr_info( network.find('snr-info') )
                     networkdata['gps-info'] = self.extract_gps_info( network.find('gps-info') )
-                    # push it into couchdb
                 data.append(networkdata)
         return data
 
