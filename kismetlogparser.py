@@ -102,7 +102,19 @@ class Mantis:
             if None != filetest:
                 filetest.close()
 
-            self.parse_xml(filename)
+            networks = self.parse_xml(filename)
+            self.saveIntoCouchDB(networks)
+
+
+    def saveIntoCouchDB(self, networkdata):
+        """
+        Store the given network data in a CouchDB.
+
+        :param networkdata: data to be stored
+        :type networkdata: str
+        :raises: TypeError, ValueError
+        """
+        [self.__db.save(nwd) for nwd in networkdata]
 
 
     def parse_xml(self,netxmlfile):
@@ -111,6 +123,7 @@ class Mantis:
 
         :param netxmlfile: name (path) of the file to open
         :type netxmlfile: str
+        :returns: list of networkdata
         :raises: TypeError, ValueError
         """
 
@@ -131,6 +144,7 @@ class Mantis:
         except FileNotFoundError:
             raise FileNotFoundError("netxml file not found")
         root = tree.getroot()
+        data = []
         for network in tree.findall('wireless-network'):
             networkdata = {}
             # only handle fixed networks, ignore probes etc.
@@ -145,9 +159,8 @@ class Mantis:
                     networkdata['snr-info'] = self.extract_snr_info( network.find('snr-info') )
                     networkdata['gps-info'] = self.extract_gps_info( network.find('gps-info') )
                     # push it into couchdb
-                doc = self.__db.save(networkdata)
-                updatecounter += 1
-        return updatecounter
+                data.append(networkdata)
+        return data
 
 
     def extract_ssid_info(self,rawdata):

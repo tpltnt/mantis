@@ -25,4 +25,5 @@ def test_nonexistent(plainmantis):
 
 
 def test_minimalfile(plainmantis, pytestconfig):
-    assert 1 == plainmantis.parse_xml(pytestconfig.getini('testdata'))
+    data = plainmantis.parse_xml(pytestconfig.getini('testdata'))
+    assert 1 == len(data)
