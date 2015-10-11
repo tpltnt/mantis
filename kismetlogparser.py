@@ -174,6 +174,8 @@ class Mantis:
         :raises: TypeError
         """
 
+        if not rawdata:
+            return {}
         if not isinstance(rawdata,ET.Element):
             raise TypeError("given rawdata not an ElementTree-element")
 
@@ -202,6 +204,9 @@ class Mantis:
         :type rawdata: xml.etree.ElementTree.Element
         :raises: TypeError
         """
+
+        if not rawdata:
+            return {}
         if not isinstance(rawdata,ET.Element):
             raise TypeError("given rawdata not an ElementTree-element")
 
@@ -239,6 +244,8 @@ class Mantis:
         :raises: TypeError
         """
 
+        if not rawdata:
+            return {}
         if not isinstance(rawdata,ET.Element):
             raise TypeError("given rawdata not an ElementTree-element")
 
